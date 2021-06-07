@@ -6,7 +6,9 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 
 const { InMemorySessionStore } = require("./sessionStore");
+const { GameManager } = require("./gameManager");
 const sessionStore = new InMemorySessionStore();
+const gameManager = new GameManager();
 const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(8).toString("hex");
 
@@ -68,12 +70,16 @@ io.on("connection", (socket) => {
     // Join the game (aka room) provided
     socket.join(socket.gameId);
 
+    gameManager.addPlayer(socket.gameId, socket.userName);
+
     socket.to(socket.gameId).emit("player joined", {
         userName: socket.userName,
     });
 
     socket.on("start game", (msg) => {
         const startToken = msg.startToken;
+        
+        gameManager.startGame(socket.gameId);
 
         io.in(socket.gameId).emit("game started", {});
     });
@@ -87,7 +93,8 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.emit("players list");
+    // let new player know about current game state
+    socket.emit("update state", gameManager.getGameState(socket.gameId));
 });
 
 server.listen(3000, () => {
@@ -102,5 +109,10 @@ function validateGameId(gameId) {
 
 function validateUserName(gameId, userName) {
     // TODO: Implement whether username is used for this game
+    return true;
+}
+
+function validateStartGameToken(startToken){
+    // TODO: Implement this by checking data store for generated start token
     return true;
 }
