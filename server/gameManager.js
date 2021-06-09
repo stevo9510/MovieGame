@@ -1,3 +1,5 @@
+const e = require("express");
+
 class GameManager {
     
     constructor() {
@@ -75,32 +77,84 @@ class GameManager {
     makeMove(gameId, userName, moveInfo){
         var game = this.gameState.get(gameId);
         var currentTurn = game.currentTurn;
+
+        if(!moveInfo.actorId && !moveInfo.movieId){
+            // Throw an error... bad data passed... one should be not null...
+        }
+
         // Case 1: Player is answering a challenge
         if(currentTurn.challenge) {
             if(currentTurn.prevPlayer != userName) {
-                // TODO: Throw an error...
+                // TODO: Throw an error... person issuing challenge is not correct
             }
 
             const correct = null;
-            if(currentTurn.movie !== null) {
+            if(currentTurn.movie) {
                 correct = this.verifyActorIsInMovie(moveInfo.actorId, currentTurn.movie.movieId);
             }
-            else if(currentTurn.actor !== null) {
+            else if(currentTurn.actor) {
                 correct = this.verifyMovieHasActorInIt(moveInfo.movieId, currentTurn.actor.actorId);
             }
+
             if(correct === true) {
                 this.giveStrike(game, currentTurn.userName);
             }
             else if(correct === false){
                 this.giveStrike(game, currentTurn.prevPlayer);
             }
+            else {
+                // TODO: is this possible to be hit? 
+            }
+
         }
+        else {
+            // shared error check...
+            if(currentTurn.userName !== userName) {
+                // throw an error... not correct player making move
+            }
+
+            const correct = null;
+
+            // Case 2: Player has to pick an Actor
+            if(currentTurn.movie !== null) {
+                correct = this.verifyActorIsInMovie(moveInfo.actorId, currentTurn.movie.movieId);
+
+            }         
+            // Case 3: Player has to pick a Movie
+            else if(currentTurn.actor !== null) {
+                correct = this.verifyMovieHasActorInIt(moveInfo.movieId, currentTurn.actor.actorId);
+            }
+            // Case 4: First Move of Game/Sequence... Can be Movie or Actor
+            else {
+                if(moveInfo.actorId && moveInfo.movieId) {
+                    // throw exception... bad data sent... one should be null
+                }
+
+                // verify non-bogus move is sent
+                if(moveInfo.actorId) {
+                    correct = verifyActorExists(moveInfo.actorId);
+                } else {
+                    correct = verifyMovieExists(moveInfo.movieId);
+                }
+                
+            }
         
-        // Case 2: Player has to pick an Actor
+            if(correct === false) {
+                this.giveStrike(game, currentTurn.userName);
+                this.currentSequence = [];
+            } 
+            else {
+                this.currentSequence.Push(this.currentTurn);
+            }
+        }
+    }
 
-        // Case 3: Player has to pick a Movie
+    verifyActorExists(actorId) {
+        return true;
+    }
 
-        // Case 4: First Move of Game/Sequence... Can be Movie or Actor
+    verifyMovieExists(movieId) {
+        return true;
     }
 
     verifyActorIsInMovie(actorId, movieId){
