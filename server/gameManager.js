@@ -1,5 +1,3 @@
-const e = require("express");
-
 class GameManager {
     
     constructor() {
@@ -141,7 +139,7 @@ class GameManager {
         
             if(correct === false) {
                 this.giveStrike(game, currentTurn.userName);
-                this.currentSequence = [];
+                this.currentSequence.length = 0;
             } 
             else {
                 this.currentSequence.Push(this.currentTurn);
