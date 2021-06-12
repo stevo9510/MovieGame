@@ -13,4 +13,5 @@ This version of the game is intended to be a progressive web application built o
 * If the player is stumped, they can make a guess (an incorrect guess leads to a strike) or they can challenge the previous player to provide an answer to it.  
   * If the challenged player provides an answer, the challenging player receives a strike; otherwise, the challenged player receives the strike.  
   * A new sequence begins after this challenge starting with the player after the challenging player.
+* The same movie/actor cannot be named within a sequence.  Movies in the same collection (e.g., sequels) cannot be named within the same sequence either.
 * Each player has three strikes until their out.  The last player remaining is the winner.
