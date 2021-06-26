@@ -8,11 +8,6 @@ hr {
   background-color:white;
 }
 
-.OptionBorderStyle {
-  border: 1px white solid;
-  padding: 25px
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;

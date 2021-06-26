@@ -1,20 +1,18 @@
 import "./App.css";
 import AppNavMenu from "./Components/AppNavMenu";
-import JoinGame from "./Components/JoinGame";
-import CreateGame from "./Components/CreateGame";
+import HomePage from "./Pages/HomePage";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
 
 function App() {
     return (
-        <div className="App">
-            <AppNavMenu></AppNavMenu>
-            <header className="App-header">
-                <JoinGame />
-                <div class="w-25" style={{ margin: "25px" }}>
-                    <hr></hr>
-                </div>
-                <CreateGame />
-            </header>
-        </div>
+        <Router>
+            <div className="App">
+                <AppNavMenu></AppNavMenu>
+                <Switch>
+                    <Route path="/" component={HomePage} exact />
+                </Switch>
+            </div>
+        </Router>
     );
 }
 
