@@ -1,10 +1,10 @@
 class GameManager {
-    
     constructor() {
         this.gameState = new Map();
+        this.startToken = "";
     }
 
-    createGame(gameId) {
+    createGame(gameId, startToken) {
         this.gameState.set(gameId, { 
             gameStarted : false,
             players : [],
@@ -16,7 +16,7 @@ class GameManager {
                 movie : {
                     movieId : null,
                     movieName : null,
-                    movieImgUrl = null
+                    movieImgUrl : null
                 },
                 actor : {
                     actorId : null,
@@ -31,6 +31,7 @@ class GameManager {
             gameEnded : false,
             winner : null,
         });
+        this.startToken = startToken;
     }
 
     startGame(gameId) {

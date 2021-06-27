@@ -11,9 +11,19 @@ const sessionStore = new InMemorySessionStore();
 const gameManager = new GameManager();
 const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(8).toString("hex");
+const { createGame } = require('./gameDao');
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: false}));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
+});
+
+app.post('/create', (req, res) => {
+    var game = createGame();
+    gameManager.createGame(game.gameId, game.startToken);
+    res.end(JSON.stringify(game));
 });
 
 io.use((socket, next) => {
