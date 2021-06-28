@@ -49,7 +49,7 @@ class GameManager {
                 strikes : 0,
                 isOut : false
             };
-            players.push(player);
+            game.players.push(player);
         }
     }
 
@@ -58,7 +58,7 @@ class GameManager {
     }
 
     getGameState(gameId) {
-        return this.gameState;
+        return this.gameState.get(gameId);
     }
 
     challenge(gameId, userName) {

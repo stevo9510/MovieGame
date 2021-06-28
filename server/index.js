@@ -3,7 +3,16 @@ const app = express();
 const http = require("http");
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3001",
+        methods: ["GET", "POST"],
+    },
+});
+const cors = require('cors');
+
+// TODO: Allows all CORS.  Tighten this up later on.
+app.use(cors());
 
 const { InMemorySessionStore } = require("./sessionStore");
 const { GameManager } = require("./gameManager");
@@ -11,16 +20,16 @@ const sessionStore = new InMemorySessionStore();
 const gameManager = new GameManager();
 const crypto = require("crypto");
 const randomId = () => crypto.randomBytes(8).toString("hex");
-const { createGame } = require('./gameDao');
+const { createGame } = require("./gameDao");
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false}));
+app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.post('/create', (req, res) => {
+app.post("/create", (req, res) => {
     var game = createGame();
     gameManager.createGame(game.gameId, game.startToken);
     res.end(JSON.stringify(game));
@@ -28,8 +37,8 @@ app.post('/create', (req, res) => {
 
 io.use((socket, next) => {
     // try to get session if it exists
+    console.log("In middleware");
     const sessionId = socket.handshake.auth.sessionId;
-
     if (sessionId) {
         const session = sessionStore.findSession(sessionId);
         if (session) {
@@ -88,7 +97,7 @@ io.on("connection", (socket) => {
 
     socket.on("start game", (msg) => {
         const startToken = msg.startToken;
-        
+
         gameManager.startGame(socket.gameId);
 
         io.in(socket.gameId).emit("game started", {});
@@ -122,7 +131,7 @@ function validateUserName(gameId, userName) {
     return true;
 }
 
-function validateStartGameToken(startToken){
+function validateStartGameToken(startToken) {
     // TODO: Implement this by checking data store for generated start token
     return true;
 }
