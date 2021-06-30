@@ -1,0 +1,16 @@
+.PlayerCard {
+    border-width: 3px;
+    margin: 5px;
+}
+
+.PlayerHeader {
+    font-weight: bold;
+}
+
+.PlayerBody {
+    background-color: #282c34;
+}
+
+.Strikes {
+    color: red;
+}
