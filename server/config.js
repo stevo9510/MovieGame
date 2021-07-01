@@ -1,4 +1,9 @@
-import { config } from 'dotenv';
+const { config } = require("dotenv");
 config();
-export const movieDbApiKey = process.env.MOVIE_DB_API_KEY;
-export const movieDbUrl = process.env.MOVIE_DB_URL;
+const movieDbApiKey = process.env.MOVIE_DB_API_KEY;
+const movieDbUrl = process.env.MOVIE_DB_URL;
+
+module.exports = {
+    movieDbApiKey,
+    movieDbUrl,
+};

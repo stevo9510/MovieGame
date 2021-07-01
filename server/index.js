@@ -16,6 +16,7 @@ app.use(cors());
 
 const { InMemorySessionStore } = require("./sessionStore");
 const { GameManager } = require("./gameManager");
+const { searchMovies } = require("./theMovieDbApi");
 const sessionStore = new InMemorySessionStore();
 const gameManager = new GameManager();
 const crypto = require("crypto");
@@ -29,7 +30,12 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.post("/create", (req, res) => {
+app.get("/api/movie", async (req, res) => {
+    var movies = await searchMovies(req.query.query);
+    res.end(JSON.stringify(movies));
+});
+
+app.post("/api/create", (req, res) => {
     var game = createGame();
     gameManager.createGame(game.gameId, game.startToken);
     res.end(JSON.stringify(game));

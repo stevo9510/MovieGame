@@ -2,7 +2,6 @@ import "./App.css";
 import AppNavMenu from "./Components/AppNavMenu";
 import HomePage from "./Pages/HomePage";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import PlayerList from "./Components/PlayerList";
 
 function App() {
     return (

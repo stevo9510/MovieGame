@@ -18,7 +18,7 @@ const CreateGame = () => {
             console.log("in player joined");
             console.log(data);
         });
-        const url = "http://localhost:3000/create";
+        const url = "http://localhost:3000/api/create";
         const data = { 
             userName : userName
         };
