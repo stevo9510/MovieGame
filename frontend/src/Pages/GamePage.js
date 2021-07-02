@@ -1,11 +1,9 @@
 import PlayerList from "./PlayerList";
 
-const GamePage = (props) => {
+const GameScreen = (props) => {
     return (
         <>
             <PlayerList></PlayerList>
         </>
     );
 };
-
-export default GamePage;
