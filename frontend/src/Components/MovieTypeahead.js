@@ -1,6 +1,6 @@
 import { Fragment } from "react";
 import GenericTypeahead from "./GenericTypeahead";
-const SEARCH_URI = `${process.env.REACT_APP_API_URL}/api/movie`;
+const SEARCH_URI = `${process.env.REACT_APP_API_URL}/api/movies`;
 
 const MovieTypeahead = () => {
     const getMovies = async (query) => {
@@ -19,13 +19,13 @@ const MovieTypeahead = () => {
                         "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
                     }
                     style={{
-                        height: "24px",
                         marginRight: "10px",
-                        width: "24px",
+                        width: "48px",
                     }}
                 />
                 <span>
-                    {option.title} ({new Date(option.release_date).getFullYear()})
+                    {option.title} (
+                    {new Date(option.release_date).getFullYear()})
                 </span>
             </Fragment>
         );

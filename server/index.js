@@ -16,7 +16,7 @@ app.use(cors());
 
 const { InMemorySessionStore } = require("./sessionStore");
 const { GameManager } = require("./gameManager");
-const { searchMovies } = require("./theMovieDbApi");
+const { searchMovies, searchActors } = require("./theMovieDbApi");
 const sessionStore = new InMemorySessionStore();
 const gameManager = new GameManager();
 const crypto = require("crypto");
@@ -30,9 +30,14 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
 });
 
-app.get("/api/movie", async (req, res) => {
+app.get("/api/movies", async (req, res) => {
     var movies = await searchMovies(req.query.query);
     res.end(JSON.stringify(movies));
+});
+
+app.get("/api/actors", async (req, res) => {
+    var actors = await searchActors(req.query.query);
+    res.end(JSON.stringify(actors));
 });
 
 app.post("/api/create", (req, res) => {
