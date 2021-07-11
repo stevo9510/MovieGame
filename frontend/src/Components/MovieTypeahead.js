@@ -1,63 +1,44 @@
-import { AsyncTypeahead } from "react-bootstrap-typeahead";
-import { useState, Fragment } from "react";
-const SEARCH_URI = "http://localhost:3000/api/movie";
+import { Fragment } from "react";
+import GenericTypeahead from "./GenericTypeahead";
+const SEARCH_URI = `${process.env.REACT_APP_API_URL}/api/movie`;
 
 const MovieTypeahead = () => {
-    const [isLoading, setIsLoading] = useState(false);
-    const [options, setOptions] = useState([]);
-
-    const handleSearch = (query) => {
-        setIsLoading(true);
-
-        fetch(`${SEARCH_URI}?query=${query}`)
-            .then((resp) => resp.json())
-            .then((data) => {
-                const options = data.map((i) => ({
-                    image_url:
-                        i.poster_path !== null
-                            ? `https://image.tmdb.org/t/p/w92/${i.poster_path}` // TODO: Move this to backend
-                            : "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=", // fallback image
-                    id: i.id,
-                    title: i.title,
-                    release_date: new Date(i.release_date),
-                }));
-
-                setOptions(options);
-                setIsLoading(false);
-            });
+    const getMovies = async (query) => {
+        const resp = await fetch(`${SEARCH_URI}?query=${query}`);
+        const data = await resp.json();
+        return data;
     };
 
-    // Bypass client-side filtering by returning `true`. Results are already
-    // filtered by the search endpoint, so no need to do it again.
-    const filterBy = () => true;
+    const renderChildren = (option, props) => {
+        return (
+            <Fragment>
+                <img
+                    alt={option.title}
+                    src={
+                        option.image_url ??
+                        "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+                    }
+                    style={{
+                        height: "24px",
+                        marginRight: "10px",
+                        width: "24px",
+                    }}
+                />
+                <span>
+                    {option.title} ({new Date(option.release_date).getFullYear()})
+                </span>
+            </Fragment>
+        );
+    };
 
     return (
-        <AsyncTypeahead
-            filterBy={filterBy}
-            id="movie-search"
-            isLoading={isLoading}
+        <GenericTypeahead
+            renderChildrenFunction={renderChildren}
             labelKey="title"
-            minLength={3}
-            onSearch={handleSearch}
-            options={options}
-            placeholder="Search for a Movie..."
-            renderMenuItemChildren={(option, props) => (
-                <Fragment>
-                    <img
-                        alt={option.title}
-                        src={option.image_url}
-                        style={{
-                            height: "24px",
-                            marginRight: "10px",
-                            width: "24px",
-                        }}
-                    />
-                    <span>
-                        {option.title} ({option.release_date.getFullYear()})
-                    </span>
-                </Fragment>
-            )}
-        />
+            controlId="movie-search"
+            getData={getMovies}
+            placeholderText="Search for a Movie..."
+        ></GenericTypeahead>
     );
 };
 
